@@ -26,12 +26,11 @@ class HeteroLinear(nn.Module):
         """
         super(HeteroLinear, self).__init__()
         self.linears = nn.ModuleDict()
-        # 为每种节点类型创建独立的线性层
+
         for typ, typ_in_size in in_feats.items():
             self.linears[str(typ)] = nn.Linear(typ_in_size, hidden_feats)
             nn.init.xavier_uniform_(self.linears[str(typ)].weight)
 
-        # 可选的批归一化和Dropout
         if bn:
             self.bn = nn.BatchNorm1d(hidden_feats)
         else:
@@ -329,7 +328,6 @@ class GNNEncoder(torch.nn.Module):
         return x
 
 
-# 边解码器
 class EdgeDecoder(torch.nn.Module):
     def __init__(self, in_channels, hidden_channels, out_channels, num_layers):
         super(EdgeDecoder, self).__init__()
@@ -352,3 +350,4 @@ class EdgeDecoder(torch.nn.Module):
             x = self.activation(x)
         x = self.mlps[-1](x)
         return x
+
