@@ -36,7 +36,7 @@ def val(args, model, val_loader, val_label,
     return AUC_val, AUPR_val, pred_val
 
 def train():
-    simplefilter(action='ignore', category=UserWarning)  # 忽略特定警告
+    simplefilter(action='ignore', category=UserWarning) 
     print('Arguments: {}'.format(args))
     set_seed(args.seed)
     if not os.path.exists(f'result/{args.dataset}'):
@@ -188,3 +188,4 @@ def train():
 
 if __name__ == '__main__':
     train()
+
