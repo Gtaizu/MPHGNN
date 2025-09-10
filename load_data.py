@@ -27,39 +27,29 @@ def load_test_data(args):
     gene_gene_link = to_undirected(gene_gene_link)
     gene_gene_link = gene_gene_link.cpu().T.numpy()
 
-    # 获取节点数量
     num_mirnas = data['miRNA'].num_nodes
     num_drugs = data['drug'].num_nodes
     num_gene = data['gene'].num_nodes
 
-    # 获取正样本掩码
     positive_mask = miRNA_drug_label == 1
-    # 提取正样本边
     positive_edges = miRNA_drug[:, positive_mask]
-    # 获取负样本掩码 (label == 0)
     negative_mask = miRNA_drug_label == 0
-    # 提取负样本边
     negative_edges = miRNA_drug[:, negative_mask]
 
-    # 创建全零矩阵
     adj_matrix = np.zeros((num_mirnas, num_drugs), dtype=np.float32)
 
-    # 填充连接关系
     src, dst = positive_edges.cpu().numpy()
-    adj_matrix[src, dst] = 1  # 有连接的位置设为1
-    # 提取关联位置
+    adj_matrix[src, dst] = 1 
     drug_miRNA_link = torch.stack([
-        positive_edges[1],  # 原目标节点(drug) -> 新源节点
-        positive_edges[0]  # 原源节点(miRNA) -> 新目标节点
+        positive_edges[1], 
+        positive_edges[0]  
     ])
     drug_miRNA_link = drug_miRNA_link.cpu().T.numpy()
     miRNA_drug_link = positive_edges.cpu().T.numpy()
 
-    # 创建链接字典
     links = {'gene-drug': gene_drug_link, 'miRNA-drug': miRNA_drug_link,
              'miRNA-gene': miRNA_gene_link, 'gene-gene': gene_gene_link}
 
-    # 构建异构图数据结构
     graph_data = {('gene', 'gene-drug', 'drug'): (torch.tensor(gene_drug_link[:, 0]),
                                                   torch.tensor(gene_drug_link[:, 1])),
                   ('miRNA', 'miRNA-drug', 'drug'): (torch.tensor(miRNA_drug_link[:, 0]),
@@ -68,13 +58,11 @@ def load_test_data(args):
                                                     torch.tensor(drug_miRNA_link[:, 1])),
                   ('miRNA', 'miRNA-gene', 'gene'): (torch.tensor(miRNA_gene_link[:, 0]),
                                                     torch.tensor(miRNA_gene_link[:, 1]))}
-    # 创建异构图
     g = dgl.heterograph(
         graph_data,
         num_nodes_dict={'miRNA': 605, 'drug': 216,
                         'gene': num_gene}
     )
-    # 构建节点特征
     drug_feature = data['drug'].x.cpu().numpy()
     miRNA_feature = data['miRNA'].x.cpu().numpy()
     gene_feature = data['gene'].x.cpu().numpy()
@@ -118,7 +106,6 @@ def load_data(args):
 
     data = torch.load("MiDrug_data_end.pth", weights_only=False)
 
-    # 加载药物相似性数据
     gene_drug_link = data['gene', 'Genedrug', 'drug'].edge_index
     gene_drug_link = gene_drug_link.cpu().T.numpy()
 
@@ -270,3 +257,4 @@ def get_data_loaders(data, batch_size, shuffle, drop=False):
     """Build data loader for train data and test data.
     """
     return DataLoader(data, batch_size=batch_size, shuffle=shuffle, drop_last=drop)
+
