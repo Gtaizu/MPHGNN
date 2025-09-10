@@ -36,18 +36,7 @@ def calculate_metrics(adj_matrix, pred_result):
 
 
 def calculate_metrics_test(edge_index, edge_label, pred_matrix):
-    """
-    计算二分类评估指标
-
-    参数:
-        edge_index (Tensor): 形状 [2, num_edges] 的边索引张量
-        edge_label (Tensor): 形状 [num_edges] 的标签 (1=正样本, 0=负样本)
-        pred_matrix (Tensor): 形状 [num_drugs, num_diseases] 的预测分数矩阵
-
-    返回:
-        tuple: (auc, aupr, accuracy, f1, precision, recall, specificity)
-    """
-
+ 
     edge_index = edge_index.cpu().numpy()
     edge_label = edge_label.cpu().numpy()
     pred_matrix = pred_matrix
@@ -282,3 +271,4 @@ def plot_result_aupr(args, label, predict, aupr):
     plt.legend(loc='lower right')
     plt.savefig(os.path.join(args.saved_path, 'result_aupr.png'))
     plt.clf()
+
