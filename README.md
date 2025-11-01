@@ -12,6 +12,7 @@ Datasets and source code are available at: https://github.com/Gtaizu/MPHGNN
 
 MiDrug_data_end.pth: miRNA-drug resistance association dataset
 # Local running
+python main.py
 # Environment
 Before running, please make sure the following packages are installed in your Python environment. We strongly recommend using a virtual environment.
 
